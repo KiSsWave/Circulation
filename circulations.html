@@ -6,13 +6,15 @@
     <title>COVID, Vélos, Pollution</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="styles.css">        
-    
 </head>
 <body>
     <h1>COVID, Vélos et Pollution</h1>
     <div id="map"></div>
     <div class="pollution-info" id="pollutionInfo">
         <strong>Qualité de l'air : </strong> Chargement...
+    </div>
+    <div class="weather-info" id="weatherInfo">
+        <strong>Météo : </strong> Chargement...
     </div>
     <div class="file-input">
         <label for="csvFile">Importer un fichier CSV pour les données COVID :</label>
@@ -21,98 +23,34 @@
     <div class="chart-container">
         <canvas id="covidChart"></canvas>
     </div>
-    <footer>
-        <p>Powered by Open Data APIs</p>
-    </footer>
+    <div class="resources">
+        <h3>Ressources Utiles</h3>
+        <ul>
+            <li>GitHub : 
+                <a target="_blank" href="https://github.com/KiSsWave/Circulation">Projet GitHub</a>
+            </li>
+            <li>API Météo : 
+                <a target="_blank" href="https://www.infoclimat.fr/public-api/gfs/xml?_ll={$latitude},{$longitude}&_auth=...">Infoclimat</a>
+            </li>
+            <li>API Géolocalisation : 
+                <a target="_blank" href="http://ip-api.com/json/{$userIp}">IP API</a>
+            </li>
+            <li>API Vélos : 
+                <a target="_blank" href="https://api.cyclocity.fr/contracts/nancy/gbfs/station_information.json">Vélos Disponibles</a>
+            </li>
+            <li>API Pollution : 
+                <a target="_blank" href="https://api.waqi.info/feed/here/?token=6b2bcfeae5cf939d58d60c5e4617879531a8e65d">WAQI API</a>
+            </li>
+        </ul>
+    </div>
+    
 
-  
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+    <script src="script.js"></script>
     <script>
-       
-        const userLat = 48.6833;
-        const userLon = 6.2;
-
-        const map = L.map('map').setView([userLat, userLon], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-        }).addTo(map);
-
-       
-        fetch('https://api.cyclocity.fr/contracts/nancy/gbfs/station_information.json')
-            .then(response => response.json())
-            .then(data => {
-                data.data.stations.forEach(station => {
-                    const { name, lat, lon, capacity } = station;
-                    L.marker([lat, lon]).addTo(map)
-                        .bindPopup(`
-                            <strong>${name}</strong><br>
-                            Capacité : ${capacity}
-                        `);
-                });
-            })
-            .catch(err => console.error('Erreur API vélos :', err));
-
         
-        fetch('https://api.waqi.info/feed/here/?token=6b2bcfeae5cf939d58d60c5e4617879531a8e65d')
-            .then(response => response.json())
-            .then(data => {
-                const aqi = data.data.aqi;
-                let quality;
-                if (aqi <= 50) quality = "Bonne";
-                else if (aqi <= 100) quality = "Moyenne";
-                else quality = "Mauvaise";
-
-                document.getElementById('pollutionInfo').innerHTML = `
-                    <strong>Qualité de l'air : </strong> ${quality} (AQI : ${aqi})
-                `;
-            })
-            .catch(err => console.error('Erreur API pollution :', err));
-
-      
-        document.getElementById('csvFile').addEventListener('change', function (event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const csvData = e.target.result;
-                const parsedData = Papa.parse(csvData, { header: true }).data;
-
-                const labels = parsedData.map(row => row.metric_month);
-                const values = parsedData.map(row => parseInt(row.monthly_visit, 10));
-
-               
-                const ctx = document.getElementById('covidChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels,
-                        datasets: [{
-                            label: 'Visites mensuelles COVID',
-                            data: values,
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 2,
-                            fill: false
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: { position: 'top' },
-                            tooltip: { enabled: true },
-                        },
-                        scales: {
-                            x: { title: { display: true, text: 'Mois' } },
-                            y: { title: { display: true, text: 'Visites' } }
-                        }
-                    }
-                });
-            };
-
-            reader.readAsText(file);
-        });
     </script>
 </body>
 </html>

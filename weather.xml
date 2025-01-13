@@ -1,0 +1,20 @@
+<previsions>
+    <echeance timestamp="2025-01-13T07:00:00">
+        <temperature level="sol">275.15</temperature>
+        <pluie>0</pluie>
+        <risque_neige>0</risque_neige>
+        <vent_moyen level="10">15</vent_moyen>
+    </echeance>
+    <echeance timestamp="2025-01-13T13:00:00">
+        <temperature level="sol">278.15</temperature>
+        <pluie>1</pluie>
+        <risque_neige>0</risque_neige>
+        <vent_moyen level="10">20</vent_moyen>
+    </echeance>
+    <echeance timestamp="2025-01-13T19:00:00">
+        <temperature level="sol">270.15</temperature>
+        <pluie>0</pluie>
+        <risque_neige>1</risque_neige>
+        <vent_moyen level="10">10</vent_moyen>
+    </echeance>
+</previsions>

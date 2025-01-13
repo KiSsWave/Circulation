@@ -5,11 +5,13 @@ body {
     line-height: 1.6;
     background: #f4f4f9;
 }
+
 h1 {
     text-align: center;
     color: #333;
     margin-top: 20px;
 }
+
 #map {
     height: 400px;
     margin: 20px auto;
@@ -18,7 +20,8 @@ h1 {
     border: 1px solid #ccc;
     border-radius: 8px;
 }
-.chart-container, .pollution-info {
+
+.chart-container, .pollution-info, .weather-info {
     width: 90%;
     max-width: 800px;
     margin: 20px auto;
@@ -26,18 +29,36 @@ h1 {
     background: white;
     border: 1px solid #ddd;
     border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.pollution-info, .weather-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pollution-info strong, .weather-info strong {
+    font-size: 1.2em;
+    color: #333;
+}
+
+.file-input {
+    margin: 20px auto;
+    text-align: center;
+}
+
 footer {
     text-align: center;
     margin: 20px 0;
     color: #555;
 }
-.file-input {
-    margin: 20px auto;
-    text-align: center;
-}
+
 @media (max-width: 768px) {
     #map {
         height: 300px;
+    }
+    .chart-container, .pollution-info, .weather-info {
+        padding: 15px;
     }
 }
